@@ -142,7 +142,7 @@ class CenterPredictor(nn.Module, ):
     def cal_bbox(self, score_map_ctr, size_map, offset_map, return_score=False):
         max_score, idx = torch.max(score_map_ctr.flatten(1), dim=1, keepdim=True)
         idx_y = idx // self.feat_sz
-        idx_x = idx % self.feat_sz
+        idx_x = idx - idx_y * self.feat_sz
 
         idx = idx.unsqueeze(1).expand(idx.shape[0], 2, 1)
         size = size_map.flatten(2).gather(dim=2, index=idx)
@@ -162,7 +162,7 @@ class CenterPredictor(nn.Module, ):
     def get_pred(self, score_map_ctr, size_map, offset_map):
         max_score, idx = torch.max(score_map_ctr.flatten(1), dim=1, keepdim=True)
         idx_y = idx // self.feat_sz
-        idx_x = idx % self.feat_sz
+        idx_x = idx - idx_y * self.feat_sz
 
         idx = idx.unsqueeze(1).expand(idx.shape[0], 2, 1)
         size = size_map.flatten(2).gather(dim=2, index=idx)

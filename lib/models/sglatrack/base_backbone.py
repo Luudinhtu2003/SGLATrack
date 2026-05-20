@@ -152,7 +152,7 @@ class BaseBackbone(nn.Module):
                 mid = x.detach()
                 pro = self.MLP(x[:,:,0].clone())
                 topk_values, topk_indices = torch.topk(pro, enabled_layer_num, dim=1)
-                sorted_topk_indices = torch.sort(topk_indices, dim=1).values + start_layer + 1
+                sorted_topk_indices = topk_indices + start_layer + 1
                 # sorted_topk_values = torch.sort(topk_values, dim=1).values
             else:
                 idx = torch.where(sorted_topk_indices[:,:]==i)[0]
@@ -207,20 +207,8 @@ class BaseBackbone(nn.Module):
 
         x = self.pos_drop(x)
 
-        for i, blk in enumerate(self.blocks): 
-            if i < start_layer:
-                x = blk(x)
-            elif i == start_layer:
-                x = blk(x)
-                pro = self.MLP(x[:,:,0].clone())
-                topk_values, topk_indices = torch.topk(pro, enabled_layer_num, dim=1)
-                sorted_topk_indices = torch.sort(topk_indices, dim=1).values + start_layer + 1
-                # sorted_topk_values = torch.sort(topk_values, dim=1).values
-            else:
-                idx = torch.where(sorted_topk_indices[:,:]==i)[0]
-                if len(idx) > 0:
-                    x[idx] = blk(x[idx])
-                    break
+        for i, blk in enumerate(self.blocks):
+            x = blk(x)
 
         x = recover_tokens(x, lens_z, lens_x, mode=self.cat_mode)
 

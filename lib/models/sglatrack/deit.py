@@ -61,7 +61,9 @@ def deit_tiny_distilled_patch16_224(pretrained=False, **kwargs):
 
     if pretrained:
             checkpoint = torch.load(pretrained, map_location="cpu")
-            missing_keys, unexpected_keys = model.load_state_dict(checkpoint['model'], strict=False)
+#            missing_keys, unexpected_keys = model.load_state_dict(checkpoint['model'], strict=False)
+            missing_keys, unexpected_keys = model.load_state_dict(checkpoint, strict=False)
+
             print(missing_keys, unexpected_keys)
             print('Load pretrained model from: ' + pretrained)
 

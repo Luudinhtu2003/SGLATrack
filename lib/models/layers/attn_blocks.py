@@ -44,12 +44,8 @@ def candidate_elimination(attn: torch.Tensor, tokens: torch.Tensor, lens_t: int,
     else:
         attn_t = attn_t.mean(dim=2).mean(dim=1)  # B, H, L-T, L_s --> B, L_s
 
-    # use sort instead of topk, due to the speed issue
-    # https://github.com/pytorch/pytorch/issues/22812
-    sorted_attn, indices = torch.sort(attn_t, dim=1, descending=True)
-
-    topk_attn, topk_idx = sorted_attn[:, :lens_keep], indices[:, :lens_keep]
-    non_topk_attn, non_topk_idx = sorted_attn[:, lens_keep:], indices[:, lens_keep:]
+    topk_attn, topk_idx = torch.topk(attn_t, lens_keep, dim=1, largest=True, sorted=False)
+    non_topk_attn, non_topk_idx = torch.topk(attn_t, attn_t.shape[1] - lens_keep, dim=1, largest=False, sorted=False)
 
     keep_index = global_index.gather(dim=1, index=topk_idx)
     removed_index = global_index.gather(dim=1, index=non_topk_idx)

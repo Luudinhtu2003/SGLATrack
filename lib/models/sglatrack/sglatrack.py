@@ -113,7 +113,8 @@ def build_sglatrack(cfg, training=True):
     pretrained_path = os.path.join(current_dir, '../../../pretrained_models')
     
     if cfg.MODEL.PRETRAIN_FILE and ('sglatrack' not in cfg.MODEL.PRETRAIN_FILE) and training:
-        pretrained = os.path.join(pretrained_path, cfg.MODEL.PRETRAIN_FILE)
+        #pretrained = os.path.join(pretrained_path, cfg.MODEL.PRETRAIN_FILE)
+        pretrained = r"F:\Tu_workspace\SGLATrack\results\train\sglatrackdeit_distilled\sglatrack_ep0297.pth.tar"
     else:
         pretrained = ''
 
