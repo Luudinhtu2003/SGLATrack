@@ -14,12 +14,13 @@ import os
 from lib.test.tracker.data_utils import Preprocessor
 from lib.utils.box_ops import clip_box
 from lib.utils.ce_utils import generate_mask_cond
-
+import matplotlib.pyplot as plt
 
 class sglatrack(BaseTracker):
     def __init__(self, params, dataset_name):
         super(sglatrack, self).__init__(params)
         network = build_sglatrack(params.cfg, training=False)
+        self.params.checkpoint = r"F:\Tu_workspace\SGLATrack\results\train\sglatrackdeit_distilled\sglatrack_ep0297.pth.tar"
         network.load_state_dict(torch.load(self.params.checkpoint, map_location='cpu')['net'], strict=True)
         self.cfg = params.cfg
         self.network = network.cuda()
@@ -69,7 +70,55 @@ class sglatrack(BaseTracker):
             '''save all predicted boxes'''
             all_boxes_save = info['init_bbox'] * self.cfg.MODEL.NUM_OBJECT_QUERIES
             return {"all_boxes": all_boxes_save}
+    def save_score_analysis(self, save_dir=None, psr_threshold=None):
+        import csv, os
+        import matplotlib.pyplot as plt
 
+        save_dir = save_dir or self.save_dir
+        os.makedirs(save_dir, exist_ok=True)
+
+        # Lưu CSV
+        csv_path = os.path.join(save_dir, "score_log.csv")
+        fields = ['frame_id', 'max_score', 'psr', 'entropy', 'displacement']
+        with open(csv_path, 'w', newline='') as f:
+            writer = csv.DictWriter(f, fieldnames=fields)
+            writer.writeheader()
+            writer.writerows(self.score_log)
+
+        frames       = [r['frame_id']     for r in self.score_log]
+        max_scores   = [r['max_score']    for r in self.score_log]
+        psrs         = [r['psr']          for r in self.score_log]
+        entropies    = [r['entropy']      for r in self.score_log]
+        displacements= [r['displacement'] for r in self.score_log]
+
+        fig, axes = plt.subplots(4, 1, figsize=(14, 10), sharex=True)
+        fig.suptitle('Tracking confidence analysis', fontsize=13)
+
+        # Plot từng metric
+        specs = [
+            (axes[0], max_scores,    'Max score',    'steelblue',  None),
+            (axes[1], psrs,          'PSR',          'darkorange', psr_threshold),
+            (axes[2], entropies,     'Entropy',      'mediumpurple', None),
+            (axes[3], displacements, 'Displacement (px)', 'crimson', None),
+        ]
+        for ax, data, label, color, thresh in specs:
+            ax.plot(frames, data, linewidth=1.2, color=color)
+            ax.set_ylabel(label, fontsize=9)
+            ax.grid(True, alpha=0.3)
+            if thresh is not None:
+                ax.axhline(y=thresh, color='red', linestyle='--', linewidth=1.2,
+                        label=f'threshold={thresh}')
+                for r in self.score_log:
+                    if r['psr'] < thresh:
+                        ax.axvspan(r['frame_id']-0.5, r['frame_id']+0.5,
+                                alpha=0.15, color='red')
+                ax.legend(fontsize=8)
+
+        axes[-1].set_xlabel('Frame')
+        plt.tight_layout()
+        plt.savefig(os.path.join(save_dir, "score_plot.png"), dpi=150)
+        plt.close()
+        print(f"Saved → {save_dir}")
     def track(self, image, info: dict = None):
         H, W, _ = image.shape
         self.frame_id += 1
@@ -94,6 +143,49 @@ class sglatrack(BaseTracker):
             dim=0) * self.params.search_size / resize_factor).tolist()  # (cx, cy, w, h) [0,1]
         # get the final box result
         self.state = clip_box(self.map_box_back(pred_box, resize_factor), H, W, margin=10)
+        # ── SCORE MAP LOGGING ──────────────────────────────────────────
+        # ── SCORE MAP ANALYSIS ────────────────────────────────────────────
+        import numpy as np
+        import torch.nn.functional as F
+
+        score_np = pred_score_map.squeeze().cpu().numpy()  # (H, W)
+
+        # 1) Max score (cũ)
+        max_score = score_np.max()
+
+        # 2) PSR — Peak-to-Sidelobe Ratio
+        peak_val = score_np.max()
+        peak_pos = np.unravel_index(score_np.argmax(), score_np.shape)
+        # Mask vùng 11x11 xung quanh đỉnh ra khỏi tính sidelobe
+        mask = np.ones_like(score_np, dtype=bool)
+        r, c = peak_pos
+        mask[max(0,r-5):r+6, max(0,c-5):c+6] = False
+        sidelobe = score_np[mask]
+        psr = (peak_val - sidelobe.mean()) / (sidelobe.std() + 1e-6)
+
+        # 3) Entropy của score map (normalize thành phân phối xác suất)
+        score_flat = score_np.flatten()
+        score_flat = score_flat - score_flat.min()  # shift về 0
+        prob = score_flat / (score_flat.sum() + 1e-6)
+        entropy = -np.sum(prob * np.log(prob + 1e-6))
+
+        # 4) Displacement jump (cx, cy)
+        cx, cy = self.state[0] + self.state[2]/2, self.state[1] + self.state[3]/2
+        if not hasattr(self, '_prev_cx'):
+            self._prev_cx, self._prev_cy = cx, cy
+        displacement = np.sqrt((cx - self._prev_cx)**2 + (cy - self._prev_cy)**2)
+        self._prev_cx, self._prev_cy = cx, cy
+
+        # Ghi log
+        if not hasattr(self, 'score_log'):
+            self.score_log = []
+        self.score_log.append({
+            'frame_id':     self.frame_id,
+            'max_score':    round(max_score, 4),
+            'psr':          round(float(psr), 4),
+            'entropy':      round(float(entropy), 4),
+            'displacement': round(float(displacement), 4),
+        })
 
         # for debug
         if self.debug:

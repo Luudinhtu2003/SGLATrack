@@ -1,3 +1,15 @@
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# ignore toàn bộ pycache trong project
+**/__pycache__/
 .claude
 results
 __pycache__/
+.vscode/
+sglatrack_trt/
+tracking/infer_trt_vid.cpp
+tracking/CMakeLists.txt

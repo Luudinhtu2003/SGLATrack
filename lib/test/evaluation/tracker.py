@@ -1,6 +1,7 @@
 import importlib
 import os
 from collections import OrderedDict
+from lib.test import tracker
 from lib.test.evaluation.environment import env_settings
 import time
 import cv2 as cv
@@ -159,7 +160,7 @@ class Tracker:
                 output.pop(key)
 
         return output
-
+    
     def run_video(self, videofilepath, optional_box=None, debug=None, visdom_info=None, save_results=False):
         """Run the tracker with the vieofile.
         args:
@@ -234,6 +235,8 @@ class Tracker:
 
             # Draw box
             out = tracker.track(frame)
+            # Sau vòng lặp track xong
+            tracker.save_score_analysis(save_dir="./results/video1", psr_threshold=0.3)
             state = [int(s) for s in out['target_bbox']]
             output_boxes.append(state)
 
@@ -285,6 +288,7 @@ class Tracker:
         """Get parameters."""
         param_module = importlib.import_module('lib.test.parameter.{}'.format(self.name))
         params = param_module.parameters(self.parameter_name)
+        print("Hello 3")
         return params
 
     def _read_image(self, image_file: str):
