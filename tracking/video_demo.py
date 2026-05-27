@@ -36,7 +36,7 @@ def run_video(tracker_name, tracker_param, videofile, optional_box=None, debug=N
 #     run_video(args.tracker_name, args.tracker_param, args.videofile, args.optional_box, args.debug, args.save_results)
 tracker_name = "sglatrack"
 tracker_param = "deit_distilled"
-videofile = r"F:\Tu_workspace\SGLATrack_copy\data\Test\UAV-Anti-UAV_Test_000026\UAV-Anti-UAV_Test_000026.mp4"
+videofile = r"/media/getac2/My Passport/tuld3/Uav_tracking/UAV-Anti-UAV/Train/Train/UAV-Anti-UAV_Train_000003/UAV-Anti-UAV_Train_000003.mp4"
 
 parent_dir = os.path.dirname(videofile)
 print(parent_dir)
