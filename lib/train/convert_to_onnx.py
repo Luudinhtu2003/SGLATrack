@@ -62,7 +62,7 @@ def run(settings):
     # =========================
     # Load checkpoint
     # =========================
-    checkpoint_path = r"F:\Tu_workspace\SGLATrack\results\train\sglatrackdeit_distilled\sglatrack_ep0297.pth.tar"
+    checkpoint_path = r"/home/getac2/tuld3/tu_workspace/track_uav/SGLATrack/results/train/sglatrackdeit_distilled/sglatrack_ep0297.pth.tar"
 
     checkpoint = torch.load(checkpoint_path, map_location="cpu")
 
