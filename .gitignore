@@ -9,7 +9,3 @@ __pycache__/
 .claude
 results
 __pycache__/
-.vscode/
-sglatrack_trt/
-tracking/infer_trt_vid.cpp
-tracking/CMakeLists.txt
