@@ -56,6 +56,8 @@ def main():
                        args.distill, args.script_teacher, args.config_teacher)
     else:
         raise ValueError("mode should be 'single' or 'multiple'.")
+    print("Done to choose parameters for training. The training command is shown below!!!")
+    print(f"Training command: {train_cmd}")
     os.system(train_cmd)
 
 

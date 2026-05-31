@@ -114,7 +114,7 @@ def build_sglatrack(cfg, training=True):
     
     if cfg.MODEL.PRETRAIN_FILE and ('sglatrack' not in cfg.MODEL.PRETRAIN_FILE) and training:
         #pretrained = os.path.join(pretrained_path, cfg.MODEL.PRETRAIN_FILE)
-        pretrained = r"/home/getac2/tuld3/tu_workspace/track_uav/SGLATrack/results/train/sglatrackdeit_distilled/sglatrack_ep0297.pth.tar"
+        pretrained = r"F:\Tu_workspace\SGLATrack\results\train\sglatrackdeit_distilled\sglatrack_ep0297.pth.tar"
     else:
         pretrained = ''
 

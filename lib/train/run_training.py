@@ -72,6 +72,7 @@ def run_training(script_name, config_name, cudnn_benchmark=True, local_rank=-1, 
     else:
        #expr_module = importlib.import_module('lib.train.convert_to_onnx')
         expr_module = importlib.import_module('lib.train.train_script')
+    print("Done to initialize parameters for training. Start to run the training script!!!")
     expr_func = getattr(expr_module, 'run')
 
     expr_func(settings)

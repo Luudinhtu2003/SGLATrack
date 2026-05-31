@@ -288,7 +288,6 @@ class Tracker:
         """Get parameters."""
         param_module = importlib.import_module('lib.test.parameter.{}'.format(self.name))
         params = param_module.parameters(self.parameter_name)
-        print("Hello 3")
         return params
 
     def _read_image(self, image_file: str):

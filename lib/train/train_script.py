@@ -15,7 +15,6 @@ from lib.models.sglatrack import build_sglatrack
 from lib.train.actors import sglatrackActor
 # for import modules
 import importlib
-
 from ..utils.focal_loss import FocalLoss
 
 
@@ -36,6 +35,7 @@ def run(settings):
 
     # update settings based on cfg
     update_settings(settings, cfg)
+    print("Update setting based on cfg.yaml successfully.")
 
     # Record the training log
     log_dir = os.path.join(settings.save_dir, 'logs')
@@ -85,4 +85,5 @@ def run(settings):
     trainer = LTRTrainer(actor, [loader_train, loader_val], optimizer, settings, lr_scheduler, use_amp=use_amp)
 
     # train process
+    print("Starting training process.")
     trainer.train(cfg.TRAIN.EPOCH, load_latest=True, fail_safe=True)

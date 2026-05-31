@@ -11,3 +11,5 @@ results
 __pycache__/
 sgla_env/
 data/
+cpp_practical/
+sglatrack_trt/

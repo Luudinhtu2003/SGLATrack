@@ -37,7 +37,9 @@ class BaseActor:
         args:
             mode (True) - Bool specifying whether in training mode.
         """
+        print("Before Train Mode: ", self.net.training)
         self.net.train(mode)
+        print("After Train Mode: ", self.net.training)
 
     def eval(self):
         """ Set network to eval mode"""

@@ -22,5 +22,5 @@ class EnvironmentSettings:
         self.msra10k_dir = ''
         self.davis_dir = ''
         self.youtubevos_dir = ''
-        self.uav123_dir = r"/home/data/uav123"
+        self.uav123_dir = r"F:\Tu_workspace\SGLATrack\data\UAV123"
         self.uav123_lmdb_dir = r"/home/data/uav123_lmdb"

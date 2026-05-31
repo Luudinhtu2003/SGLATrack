@@ -1,6 +1,7 @@
 import os
 import datetime
 from collections import OrderedDict
+from tqdm import tqdm
 
 from lib.train.data.wandb_logger import WandbWriter
 from lib.train.trainers import BaseTrainer
@@ -65,13 +66,11 @@ class LTRTrainer(BaseTrainer):
 
     def cycle_dataset(self, loader):
         """Do a cycle of training or validation."""
-
         self.actor.train(loader.training)
         torch.set_grad_enabled(loader.training)
-
         self._init_timing()
-
-        for i, data in enumerate(loader, 1):
+        for i, data in tqdm(enumerate(loader, 1)):
+            print("Start to process batch %d / %d" % (i, loader.__len__()))
             self.data_read_done_time = time.time()
             # get inputs
             if self.move_data_to_gpu:

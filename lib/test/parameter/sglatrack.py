@@ -10,7 +10,7 @@ def parameters(yaml_name: str):
     save_dir = env_settings().save_dir
     # update default config from yaml file
     #yaml_file = os.path.join(prj_dir, 'experiments/sglatrack/%s.yaml' % yaml_name)
-    yaml_file = r"/home/getac2/tuld3/tu_workspace/track_uav/SGLATrack/experiments/sglatrack/deit_distilled.yaml"
+    yaml_file = r"F:\Tu_workspace\SGLATrack\experiments\sglatrack\deit_distilled.yaml"
     update_config_from_file(yaml_file)
     params.cfg = cfg
     print("test config: ", cfg)
