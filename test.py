@@ -2,7 +2,7 @@
 import os
 
 
-SEQ_PATH = r"F:\Tu_workspace\SGLATrack\data\UAV123\data_seq\UAV123"
+SEQ_PATH = r"/home/getac2/tuld3/tu_workspace/track_uav/SGLATrack/data/UAV123/data_seq/UAV123"
 
 list_sequences = os.listdir(SEQ_PATH)
 print("UAV123 sequences: ", list_sequences)

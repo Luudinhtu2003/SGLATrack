@@ -1,17 +1,21 @@
+print("Hello 22")
+
 import torch
 import os
 import os.path
 import numpy as np
 import pandas
 import random
-from collections import OrderedDict
+print("Hello 22")
 
+from collections import OrderedDict
+print("Hello 22")
 from lib.train.data import jpeg4py_loader
 from .base_video_dataset import BaseVideoDataset
 from lib.train.admin import env_settings
 from tqdm import tqdm
-
-SEQ_PATH = r"F:\Tu_workspace\SGLATrack\data\UAV123\data_seq\UAV123"
+print("Hello 22")
+SEQ_PATH = r"/home/getac2/tuld3/tu_workspace/track_uav/SGLATrack/data/UAV123/data_seq/UAV123"
 
 
 def list_sequences(root):
@@ -105,7 +109,7 @@ class UAV123(BaseVideoDataset):
         anno_folder = os.path.join(self.root, "anno", "UAV123")
         anno_file = os.path.join(anno_folder, video_name + ".txt")
         if not os.path.isfile(anno_file):
-            anno_file = os.path.dirname(anno_file) + "\\" + video_name + "_1.txt"
+            anno_file = os.path.dirname(anno_file) + "/" + video_name + "_1.txt"
             if os.path.isfile(anno_file):
                 pass
             else:

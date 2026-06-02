@@ -96,9 +96,9 @@ lib/test/evaluation/local.py  # paths about testing
 Download pre-trained [DeiT-tiny distilled weights](https://dl.fbaipublicfiles.com/deit/deit_tiny_distilled_patch16_224-b40b3cf7.pth) and put it under `$PROJECT_ROOT$/pretrained_models` 
 
 ```
-python tracking/train.py 
---script sglatrack --config deit_distilled 
---save_dir ./output 
+python tracking/train.py \
+--script sglatrack --config deit_distilled \
+--save_dir ./output \
 --mode multiple --nproc_per_node 4 \
 --use_wandb 0
 ```

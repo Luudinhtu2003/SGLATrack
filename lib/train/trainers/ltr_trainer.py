@@ -2,11 +2,19 @@ import os
 import datetime
 from collections import OrderedDict
 from tqdm import tqdm
+print("Hello 20")
 
 from lib.train.data.wandb_logger import WandbWriter
+print("Hello 20")
+
 from lib.train.trainers import BaseTrainer
+print("Hello 20")
+
 from lib.train.admin import AverageMeter, StatValue
+print("Hello 20")
+
 from lib.train.admin import TensorboardWriter
+print("Hello 20")
 import torch
 import time
 from torch.utils.data.distributed import DistributedSampler
@@ -15,7 +23,7 @@ from torch.cuda.amp import GradScaler
 
 from lib.utils.misc import get_world_size
 
-
+print("Hello 16")
 class LTRTrainer(BaseTrainer):
     def __init__(self, actor, loaders, optimizer, settings, lr_scheduler=None, use_amp=False):
         """

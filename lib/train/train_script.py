@@ -1,24 +1,37 @@
 import os
 # loss function related
 from lib.utils.box_ops import giou_loss
+print("Hello 4")
+
 from torch.nn.functional import l1_loss
 from torch.nn import BCEWithLogitsLoss
 # train pipeline related
+print("Hello 4")
+
 from lib.train.trainers import LTRTrainer
 # distributed training related
+print("Hello 6")
 from torch.nn.parallel import DistributedDataParallel as DDP
 # some more advanced functions
+print("Hello 4")
 from .base_functions import *
 # network related
+print("Hello 4")
 from lib.models.sglatrack import build_sglatrack
 # forward propagation related
+print("Hello 4")
+
 from lib.train.actors import sglatrackActor
 # for import modules
+print("Hello 4")
+
 import importlib
 from ..utils.focal_loss import FocalLoss
 
 
 def run(settings):
+    print("Hello 5")
+
     settings.description = 'Training script for STARK-S, STARK-ST stage1, and STARK-ST stage2'
 
     # update the default configs with config file

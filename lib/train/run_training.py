@@ -33,6 +33,7 @@ def run_training(script_name, config_name, cudnn_benchmark=True, local_rank=-1, 
         config_name: Name of the yaml file in the "experiments/<script_name>".
         cudnn_benchmark: Use cudnn benchmark or not (default is True).
     """
+    print("Hello 2")
     if save_dir is None:
         print("save_dir dir is not given. Use the default dir instead.")
     # This is needed to avoid strange crashes related to opencv
@@ -48,6 +49,7 @@ def run_training(script_name, config_name, cudnn_benchmark=True, local_rank=-1, 
             init_seeds(base_seed + local_rank)
         else:
             init_seeds(base_seed)
+    print("Hello 2")
 
     settings = ws_settings.Settings()
     settings.script_name = script_name
@@ -70,9 +72,12 @@ def run_training(script_name, config_name, cudnn_benchmark=True, local_rank=-1, 
         settings.cfg_file_teacher = os.path.join(prj_dir, 'experiments/%s/%s.yaml' % (script_teacher, config_teacher))
         expr_module = importlib.import_module('lib.train.train_script_distill')
     else:
+        print("Hello 2")
+
        #expr_module = importlib.import_module('lib.train.convert_to_onnx')
         expr_module = importlib.import_module('lib.train.train_script')
     print("Done to initialize parameters for training. Start to run the training script!!!")
+    print("Hello 3")
     expr_func = getattr(expr_module, 'run')
 
     expr_func(settings)
@@ -101,6 +106,7 @@ def main():
         torch.cuda.set_device(args.local_rank)
     else:
         torch.cuda.set_device(0)
+    print("Hello 1")
     run_training(args.script, args.config, cudnn_benchmark=args.cudnn_benchmark,
                  local_rank=args.local_rank, save_dir=args.save_dir, base_seed=args.seed,
                  use_lmdb=args.use_lmdb, script_name_prv=args.script_prv, config_name_prv=args.config_prv,
